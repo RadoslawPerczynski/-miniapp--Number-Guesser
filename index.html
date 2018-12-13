@@ -12,14 +12,20 @@
     <div class="container">
       <h1>Number guesser</h1>
       <p>Guess number between <span class="min">1</span> and <span class="max"></span>. You have <span class="attempts"></span> attempts.</p>
+   
       <form>
-          <label for="number-input">Type a number</label>
-          <input type="number" id="number-input" placeholder="Type the number">
-          <input type="submit" value="Try" class="button-primary">
+        <label for="number-input">Type a number</label>
+        <input type="number" id="number-input" placeholder="Type the number">
+        <input type="submit" value="Try" class="button-primary">
+
+        <div id="warning" style="position: absolute; opacity: 0">
+          <p style=" color: #8a6d3b; background: #faf2cc">You tried number <span class="current-number"></span> in your <span class="attempt-index"></span> attempt.</p>
+        </div>
+
       </form>
+
       <p class="message"></p>
       
-
     </div>
     <script src="app.js"></script>
   </body>

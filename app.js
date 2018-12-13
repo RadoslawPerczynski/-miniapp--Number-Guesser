@@ -5,44 +5,44 @@ let guessInput = document.querySelector('#number-input'),
   attemptsField = document.querySelector('.attempts')
   btn = document.querySelector('input[type="submit"]'),
   container = document.querySelector('.container'),
-  messageParagraph = document.querySelector('.message');
+  messageParagraph = document.querySelector('.message'),
+  currentNumberField = document.querySelector('.current-number'),
+  attemptIndex = document.querySelector('.attempt-index'),
+  warning = document.querySelector('#warning');
 
+//game
+let min = 1,
+  max = 15,
+  winningNumber = getRandomNumber(min, max),
+  numberOfAttempts = 6,
+  userAttempts = [];
 
-  //game
-  let min = 2,
-    max = 8,
-    winningNumber = getRandomNumber(min, max),
-    numberOfAttempts = 3,
-    userAttempts = [];
-
+//showing instruction
 minField.textContent = min;
 maxField.textContent = max;
 attemptsField.textContent = numberOfAttempts;
 
-
+//start
 btn.addEventListener('click', processTheGuess);
-showIfGuessNumberDuplicated();
+showWarningIfGuessNumberDuplicated();
 
+function getRandomNumber(min, max) {
+  let randomNum = Math.random()*(max-min+1)+min;
 
-function showIfGuessNumberDuplicated() {
+  return Math.floor(randomNum);
+}
+
+function showWarningIfGuessNumberDuplicated() {
   guessInput.addEventListener('input', function() {
 
-    let CurrentNumber = parseInt(guessInput.value);
-    let CurrentAttempts = userAttempts;
-    console.log(CurrentNumber);
-    console.log(CurrentAttempts);
-    console.log(CurrentAttempts.indexOf(CurrentNumber))
-
-    if(CurrentAttempts.indexOf(CurrentNumber) === -1) {
-      console.log('allowed')
-    } else {
-      console.log('not allowerd')
-    }
-
-   
-})
-
+    let currentNumber = parseInt(guessInput.value);
+    currentNumberField.textContent = currentNumber;
+    attemptIndex.textContent = userAttempts.indexOf(currentNumber)+1;
+    userAttempts.indexOf(currentNumber) != -1 ? warning.style.opacity = "1" : warning.style.opacity = "0";
+       
+  })
 }
+
 
 function processTheGuess(e) {
   e.preventDefault();
@@ -55,7 +55,9 @@ function processTheGuess(e) {
   }
 
   if(guessValue === winningNumber) {
-    winNotification()
+    setMessage(true, 'Congrats! ;) You won!')
+    guessInput.disabled = true;
+    prepareToPlayAgain()
   }
   else {
     userAttempts.push(guessValue);
@@ -64,27 +66,24 @@ function processTheGuess(e) {
 
 }
 
-function winNotification() {
-  setMessage(true, 'Congrats! ;) You won!')
-  guessInput.disabled = true;
-  playAgain()
-}
 function goToNextAttempt(e) {
 
   numberOfAttempts--;
   guessInput.value = "";
   guessInput.focus();
-  setMessage(false, `Fail. ${numberOfAttempts} attempts left.`)
+  setMessage(false, `Wrong guess. ${numberOfAttempts} attempts left.`)
+
   if(numberOfAttempts === 0) {
     gameOver()
-
   }
 
 }
 function gameOver() {
+
   setMessage(false, `Game over. The correct number was ${winningNumber}. Your numbers: ${userAttempts.join(' | ')}`);
   guessInput.disabled = true;
-  playAgain();
+  prepareToPlayAgain();
+
 }
 
 function setMessage(win, message) {
@@ -94,23 +93,16 @@ function setMessage(win, message) {
   messageParagraph.textContent = message;
 
 }
-function playAgain() {
+function prepareToPlayAgain() {
   btn.value = 'Play again';
-  const playAgainClass = 'play-again';
-
-  btn.classList.add(playAgainClass);
-  let playAgainButton = document.querySelector("."+playAgainClass);
   btn.removeEventListener('click', processTheGuess);
 
-  playAgainButton.addEventListener('click', function() {
+  btn.addEventListener('click', function() {
     window.location.reload();
   })
 
 }
-function getRandomNumber(min, max) {
-  let randomNum = Math.random()*(max-min+1)+min;
 
-  return Math.floor(randomNum);
-}
+
 
     
